@@ -8,7 +8,9 @@ public class RecipeSO : ScriptableObject
     public string recipeName;
     public List<ElementSO> ingredientsItemSOList;
     public ElementSO outputElementSO;
-    
+    public int vpOpenCount;
+
+
 
 
 }

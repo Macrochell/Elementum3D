@@ -2,13 +2,12 @@ using UnityEngine;
 
 public class ChangeMaterialElement : MonoBehaviour
 {
-    [SerializeField] private Material MaterialElement;
+    public Material materialElement;
     void Start()
     {
         Renderer elementRenderer = GetComponent<Renderer>();
-        elementRenderer.material = MaterialElement;
+        elementRenderer.material = materialElement;
 
     }
-
 
 }

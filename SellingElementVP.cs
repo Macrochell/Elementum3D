@@ -1,11 +1,14 @@
-using UnityEngine;
+п»їusing UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using YG;
+
 public class SellingElementVP : MonoBehaviour
 {
-    [SerializeField] private Transform VfxSellElement;
+
     [SerializeField] private GameObject ElementObject;
     [SerializeField] private WorldState worldState;
+    [SerializeField] private VpSellAnimation vpSellAnimation;
     public static event System.Action<int> OnSellingElement;
     private Vector3 originalScale;
     private Image buttonImage;
@@ -20,17 +23,29 @@ public class SellingElementVP : MonoBehaviour
     {
         if (collision.gameObject.tag == "Element")
         {
-            transform.DOScale(originalScale * 1.3f, 0.4f) 
+            vpSellAnimation.OnEnergyButtonClicked();
+            transform.DOScale(originalScale * 1.3f, 0.4f)
             .SetEase(Ease.OutQuad)
             .OnComplete(() =>
                 transform.DOScale(originalScale, 0.4f).SetEase(Ease.InQuad));
-            worldState.AddEvent("\"Этот элемент преобразован в эфир, его энергия наполнит будущие миры.\"");
+
+            if (YandexGame.EnvironmentData.language == "ru")
+            {
+                worldState.AddEvent("\"Р­С‚РѕС‚ СЌР»РµРјРµРЅС‚ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅ РІ СЌС„РёСЂ, РµРіРѕ СЌРЅРµСЂРіРёСЏ РЅР°РїРѕР»РЅРёС‚ Р±СѓРґСѓС‰РёРµ РјРёСЂС‹.\"");
+            }
+            if (YandexGame.EnvironmentData.language == "en")
+            {
+                worldState.AddEvent("\"This element has been transformed into Ether, its energy will fill future worlds.\"");
+            }
+            if (YandexGame.EnvironmentData.language == "tr")
+            {
+                worldState.AddEvent("\"Bu element Eter'e dГ¶nГјЕџtГј, enerjisi gelecekteki dГјnyalarД± dolduracak.\"");
+            }
+
             ElementObject = collision.gameObject;
             ElementSO_Holder elementSO_Holder = ElementObject.GetComponent<ElementSO_Holder>();
             OnSellingElement?.Invoke(elementSO_Holder.elementSO.vpCount);
-            //AddShield();
-            //AudioManager.Instance.PlaySFX("MergeWeapon");
-            //Instantiate(vfxdestroy, robotObject.transform.position, robotObject.transform.rotation);
+            AudioManager.Instance.PlaySFX("sellElement");
             Destroy(ElementObject);
             ElementObject = null;
 
@@ -38,17 +53,5 @@ public class SellingElementVP : MonoBehaviour
 
     }
 
-    //public void AddShield()
-    //{
-    //    RobotPowerInfo robotPower = robotObject.GetComponent<RobotPowerInfo>();
-    //    addShieldText.text = "+" + robotPower.powerRobot.ToString();
-    //    showaddShield.SetActive(true);
-    //    StartCoroutine(nameof(TimerAddShield));
-    //}
 
-    //IEnumerator TimerAddShield()
-    //{
-    //    yield return new WaitForSeconds(2.5f);
-    //    showaddShield.SetActive(false);
-    //}
 }

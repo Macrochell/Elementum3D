@@ -1,68 +1,133 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using DG.Tweening;
+using YG;
+
 
 public class Match : MonoBehaviour
 {
-    [SerializeField] private List<RecipeSO> recipeSOList;
-    [SerializeField] private SphereCollider placeElementsAreaSphereCollider;
-    [SerializeField] private Transform itemSpawnPoint;
-    [SerializeField] private Transform successvfxSpawnitem;
+    public List<RecipeSO> recipeSOList;
+    public SphereCollider placeElementsAreaSphereCollider;
+    public Transform itemSpawnPoint;
+    public Transform successvfxSpawnitem;
 
-    [SerializeField] private Transform failurevfxSpawnitem;
-    [SerializeField] private RecipeUIManager recipeUIManager;
-    [SerializeField] private WorldState worldState;
-    [SerializeField] private GameObject buttonMerge;
-    [SerializeField] private GameObject buttonTap;
-    [SerializeField] private GameObject iconTap;
-    private bool isMaterialAppliedStone;
-    private bool isMaterialAppliedLava;
-    private bool isMaterialAppliedGrass;
+    public Transform failurevfxSpawnitem;
+    public RecipeUIManager recipeUIManager;
+    public WorldState worldState;
+    public GameObject buttonMerge;
+    public GameObject buttonTap;
+    public GameObject iconTap;
+    public bool isMaterialAppliedStone;
+    public bool isMaterialAppliedLava;
+    public bool isMaterialAppliedGrass;
 
     private Vector3 originalScale;
-    [SerializeField] private GameObject planet;
+    public GameObject planet;
+    public Material MaterialLava;
+    public Material MaterialStone;
+    public Material MaterialGrass;
 
-    [SerializeField] private Material MaterialLava;
-    [SerializeField] private Material MaterialStone;
-    [SerializeField] private Material MaterialGrass;
+
+    public GameObject mountainsObject;
+    public GameObject treeObject;
+    public GameObject plantObject;
+    public GameObject golemObject;
 
 
-    [SerializeField] private GameObject mountainsObject;
-    [SerializeField] private GameObject treeObject;
-    [SerializeField] private GameObject plantObject;
-    [SerializeField] private GameObject GolemObject;
-
-    Dictionary<string, string> elementDescriptions = new Dictionary<string, string>
+    Dictionary<string, string> elementDescriptionsRu = new Dictionary<string, string>
 {
-    { "Lava", "\"Из огня и земли родилась лава — пылающая кровь планеты.\"" },
-    { "Stone", "\"Лава остыла, воздух обнял её, и родился крепкий камень.\"" },
-    { "Bacteria", "\"Жизнь родилась в капле воды, где крошечные создания стали первыми обитателями мира.\"" },
-    { "Clay", "\"Земля и вода слились воедино, породив мягкую глину — основу для будущих творений.\"" },
-    { "Coal", "\"Годы под давлением превратили древние леса в чёрное топливо, хранящее в себе энергию.\"" },
-    { "Diamond", "\"Чудовищное давление и время превратили углерод в сияющий камень вечности.\"" },
-    { "Earthquake", "\"Земля вздрогнула, и скалы разошлись, открывая глубины недр планеты.\"" },
-    { "Energy", "\"Слияние стихий высвободило чистую силу, способную дарить жизнь или разрушение.\"" },
-    { "Glass", "\"Огонь обнял песок, превратив его в прозрачный камень, что хранит свет.\"" },
-    { "Golem", "\"Из глины и древних чар был создан великан, оживший благодаря силе земли.\"" },
-    { "Grass", "\"Первая зелень пробилась сквозь землю, устремившись к солнцу.\"" },
-    { "Heat", "\"Сила огня раскалила воздух, наполнив мир нестерпимым жаром.\"" },
-    { "Life", "\"Из хаоса стихий родилось нечто новое — дыхание жизни, готовое познавать мир.\"" },
-    { "Mountain", "\"Гигантские глыбы поднялись из недр, создавая могучие вершины.\"" },
-    { "Mud", "\"Земля смешалась с водой, создавая вязкую грязь — основу новых форм.\"" },
-    { "Ocean", "\"Вода собралась в бескрайние просторы, рождая глубины, полные тайн.\"" },
-    { "Plant", "\"Из маленького семени выросла зелёная жизнь, питаемая светом и водой.\"" },
-    { "Pressure", "\"Мир сжался, и его сила уплотнила вещество, создавая новые материи.\"" },
-    { "Rain", "\"Небо заплакало, питая землю и даруя жизнь всему живому.\"" },
-    { "Sand", "\"Ветер разрушил камни, оставив после себя бескрайние песчаные дюны.\"" },
-    { "Sea", "\"Капли воды слились воедино, рождая мощь приливов и волн.\"" },
-    { "Steam", "\"Жар коснулся воды, и она превратилась в лёгкую дымку, уносящуюся в небо.\"" },
-    { "Swamp", "\"Вода и земля слились, создавая топкие земли, где жизнь процветает в тени.\"" },
-    { "Tree", "\"Из крошечного ростка вырос могучий великан, раскинувший ветви к небесам.\"" },
-    { "Volcano", "\"Земля разверзлась, и огонь вырвался наружу, творя новые земли.\"" },
-    { "Wind", "\"Воздух пришёл в движение, неся перемены и наполняя мир дыханием свободы.\"" }
+
+    { "Lava", "\"РР· РѕРіРЅСЏ Рё Р·РµРјР»Рё СЂРѕРґРёР»Р°СЃСЊ Р»Р°РІР° вЂ” РїС‹Р»Р°СЋС‰Р°СЏ РєСЂРѕРІСЊ РїР»Р°РЅРµС‚С‹.\"" },
+    { "Stone", "\"Р›Р°РІР° РѕСЃС‚С‹Р»Р°, РІРѕР·РґСѓС… РѕР±РЅСЏР» РµС‘, Рё СЂРѕРґРёР»СЃСЏ РєСЂРµРїРєРёР№ РєР°РјРµРЅСЊ.\"" },
+    { "Bacteria", "\"Р–РёР·РЅСЊ СЂРѕРґРёР»Р°СЃСЊ РІ РєР°РїР»Рµ РІРѕРґС‹, РіРґРµ РєСЂРѕС€РµС‡РЅС‹Рµ СЃРѕР·РґР°РЅРёСЏ СЃС‚Р°Р»Рё РїРµСЂРІС‹РјРё РѕР±РёС‚Р°С‚РµР»СЏРјРё РјРёСЂР°.\"" },
+    { "Clay", "\"Р—РµРјР»СЏ Рё РІРѕРґР° СЃР»РёР»РёСЃСЊ РІРѕРµРґРёРЅРѕ, РїРѕСЂРѕРґРёРІ РјСЏРіРєСѓСЋ РіР»РёРЅСѓ вЂ” РѕСЃРЅРѕРІСѓ РґР»СЏ Р±СѓРґСѓС‰РёС… С‚РІРѕСЂРµРЅРёР№.\"" },
+    { "Coal", "\"Р“РѕРґС‹ РїРѕРґ РґР°РІР»РµРЅРёРµРј РїСЂРµРІСЂР°С‚РёР»Рё РґСЂРµРІРЅРёРµ Р»РµСЃР° РІ С‡С‘СЂРЅРѕРµ С‚РѕРїР»РёРІРѕ, С…СЂР°РЅСЏС‰РµРµ РІ СЃРµР±Рµ СЌРЅРµСЂРіРёСЋ.\"" },
+    { "Diamond", "\"Р§СѓРґРѕРІРёС‰РЅРѕРµ РґР°РІР»РµРЅРёРµ Рё РІСЂРµРјСЏ РїСЂРµРІСЂР°С‚РёР»Рё СѓРіР»РµСЂРѕРґ РІ СЃРёСЏСЋС‰РёР№ РєР°РјРµРЅСЊ РІРµС‡РЅРѕСЃС‚Рё.\"" },
+    { "Earthquake", "\"Р—РµРјР»СЏ РІР·РґСЂРѕРіРЅСѓР»Р°, Рё СЃРєР°Р»С‹ СЂР°Р·РѕС€Р»РёСЃСЊ, РѕС‚РєСЂС‹РІР°СЏ РіР»СѓР±РёРЅС‹ РЅРµРґСЂ РїР»Р°РЅРµС‚С‹.\"" },
+    { "Energy", "\"РЎР»РёСЏРЅРёРµ СЃС‚РёС…РёР№ РІС‹СЃРІРѕР±РѕРґРёР»Рѕ С‡РёСЃС‚СѓСЋ СЃРёР»Сѓ, СЃРїРѕСЃРѕР±РЅСѓСЋ РґР°СЂРёС‚СЊ Р¶РёР·РЅСЊ РёР»Рё СЂР°Р·СЂСѓС€РµРЅРёРµ.\"" },
+    { "Glass", "\"РћРіРѕРЅСЊ РѕР±РЅСЏР» РїРµСЃРѕРє, РїСЂРµРІСЂР°С‚РёРІ РµРіРѕ РІ РїСЂРѕР·СЂР°С‡РЅС‹Р№ РєР°РјРµРЅСЊ, С‡С‚Рѕ С…СЂР°РЅРёС‚ СЃРІРµС‚.\"" },
+    { "Golem", "\"РР· РіР»РёРЅС‹ Рё РґСЂРµРІРЅРёС… С‡Р°СЂ Р±С‹Р» СЃРѕР·РґР°РЅ РІРµР»РёРєР°РЅ, РѕР¶РёРІС€РёР№ Р±Р»Р°РіРѕРґР°СЂСЏ СЃРёР»Рµ Р·РµРјР»Рё.\"" },
+    { "Grass", "\"РџРµСЂРІР°СЏ Р·РµР»РµРЅСЊ РїСЂРѕР±РёР»Р°СЃСЊ СЃРєРІРѕР·СЊ Р·РµРјР»СЋ, СѓСЃС‚СЂРµРјРёРІС€РёСЃСЊ Рє СЃРѕР»РЅС†Сѓ.\"" },
+    { "Heat", "\"РЎРёР»Р° РѕРіРЅСЏ СЂР°СЃРєР°Р»РёР»Р° РІРѕР·РґСѓС…, РЅР°РїРѕР»РЅРёРІ РјРёСЂ РЅРµСЃС‚РµСЂРїРёРјС‹Рј Р¶Р°СЂРѕРј.\"" },
+    { "Life", "\"РР· С…Р°РѕСЃР° СЃС‚РёС…РёР№ СЂРѕРґРёР»РѕСЃСЊ РЅРµС‡С‚Рѕ РЅРѕРІРѕРµ вЂ” РґС‹С…Р°РЅРёРµ Р¶РёР·РЅРё, РіРѕС‚РѕРІРѕРµ РїРѕР·РЅР°РІР°С‚СЊ РјРёСЂ.\"" },
+    { "Mountain", "\"Р“РёРіР°РЅС‚СЃРєРёРµ РіР»С‹Р±С‹ РїРѕРґРЅСЏР»РёСЃСЊ РёР· РЅРµРґСЂ, СЃРѕР·РґР°РІР°СЏ РјРѕРіСѓС‡РёРµ РІРµСЂС€РёРЅС‹.\"" },
+    { "Mud", "\"Р—РµРјР»СЏ СЃРјРµС€Р°Р»Р°СЃСЊ СЃ РІРѕРґРѕР№, СЃРѕР·РґР°РІР°СЏ РІСЏР·РєСѓСЋ РіСЂСЏР·СЊ вЂ” РѕСЃРЅРѕРІСѓ РЅРѕРІС‹С… С„РѕСЂРј.\"" },
+    { "Ocean", "\"Р’РѕРґР° СЃРѕР±СЂР°Р»Р°СЃСЊ РІ Р±РµСЃРєСЂР°Р№РЅРёРµ РїСЂРѕСЃС‚РѕСЂС‹, СЂРѕР¶РґР°СЏ РіР»СѓР±РёРЅС‹, РїРѕР»РЅС‹Рµ С‚Р°Р№РЅ.\"" },
+    { "Plant", "\"РР· РјР°Р»РµРЅСЊРєРѕРіРѕ СЃРµРјРµРЅРё РІС‹СЂРѕСЃР»Р° Р·РµР»С‘РЅР°СЏ Р¶РёР·РЅСЊ, РїРёС‚Р°РµРјР°СЏ СЃРІРµС‚РѕРј Рё РІРѕРґРѕР№.\"" },
+    { "Pressure", "\"РњРёСЂ СЃР¶Р°Р»СЃСЏ, Рё РµРіРѕ СЃРёР»Р° СѓРїР»РѕС‚РЅРёР»Р° РІРµС‰РµСЃС‚РІРѕ, СЃРѕР·РґР°РІР°СЏ РЅРѕРІС‹Рµ РјР°С‚РµСЂРёРё.\"" },
+    { "Rain", "\"РќРµР±Рѕ Р·Р°РїР»Р°РєР°Р»Рѕ, РїРёС‚Р°СЏ Р·РµРјР»СЋ Рё РґР°СЂСѓСЏ Р¶РёР·РЅСЊ РІСЃРµРјСѓ Р¶РёРІРѕРјСѓ.\"" },
+    { "Sand", "\"Р’РµС‚РµСЂ СЂР°Р·СЂСѓС€РёР» РєР°РјРЅРё, РѕСЃС‚Р°РІРёРІ РїРѕСЃР»Рµ СЃРµР±СЏ Р±РµСЃРєСЂР°Р№РЅРёРµ РїРµСЃС‡Р°РЅС‹Рµ РґСЋРЅС‹.\"" },
+    { "Sea", "\"РљР°РїР»Рё РІРѕРґС‹ СЃР»РёР»РёСЃСЊ РІРѕРµРґРёРЅРѕ, СЂРѕР¶РґР°СЏ РјРѕС‰СЊ РїСЂРёР»РёРІРѕРІ Рё РІРѕР»РЅ.\"" },
+    { "Steam", "\"Р–Р°СЂ РєРѕСЃРЅСѓР»СЃСЏ РІРѕРґС‹, Рё РѕРЅР° РїСЂРµРІСЂР°С‚РёР»Р°СЃСЊ РІ Р»С‘РіРєСѓСЋ РґС‹РјРєСѓ, СѓРЅРѕСЃСЏС‰СѓСЋСЃСЏ РІ РЅРµР±Рѕ.\"" },
+    { "Swamp", "\"Р’РѕРґР° Рё Р·РµРјР»СЏ СЃР»РёР»РёСЃСЊ, СЃРѕР·РґР°РІР°СЏ С‚РѕРїРєРёРµ Р·РµРјР»Рё, РіРґРµ Р¶РёР·РЅСЊ РїСЂРѕС†РІРµС‚Р°РµС‚ РІ С‚РµРЅРё.\"" },
+    { "Tree", "\"РР· РєСЂРѕС€РµС‡РЅРѕРіРѕ СЂРѕСЃС‚РєР° РІС‹СЂРѕСЃ РјРѕРіСѓС‡РёР№ РІРµР»РёРєР°РЅ, СЂР°СЃРєРёРЅСѓРІС€РёР№ РІРµС‚РІРё Рє РЅРµР±РµСЃР°Рј.\"" },
+    { "Volcano", "\"Р—РµРјР»СЏ СЂР°Р·РІРµСЂР·Р»Р°СЃСЊ, Рё РѕРіРѕРЅСЊ РІС‹СЂРІР°Р»СЃСЏ РЅР°СЂСѓР¶Сѓ, С‚РІРѕСЂСЏ РЅРѕРІС‹Рµ Р·РµРјР»Рё.\"" },
+    { "Wind", "\"Р’РѕР·РґСѓС… РїСЂРёС€С‘Р» РІ РґРІРёР¶РµРЅРёРµ, РЅРµСЃСЏ РїРµСЂРµРјРµРЅС‹ Рё РЅР°РїРѕР»РЅСЏСЏ РјРёСЂ РґС‹С…Р°РЅРёРµРј СЃРІРѕР±РѕРґС‹.\"" }
 };
 
+    Dictionary<string, string> elementDescriptionsEn = new Dictionary<string, string>
+{
+
+   { "Lava", "\"From fire and earth, lava was born вЂ” the burning blood of the planet.\"" },
+{ "Stone", "\"Lava cooled, air embraced it, and a strong stone was born.\"" },
+{ "Bacteria", "\"Life was born in a drop of water, where tiny creatures became the first inhabitants of the world.\"" },
+{ "Clay", "\"Earth and water merged, creating soft clay вЂ” the foundation for future creations.\"" },
+{ "Coal", "\"Years under pressure turned ancient forests into black fuel, storing energy within.\"" },
+{ "Diamond", "\"Immense pressure and time transformed carbon into a shining stone of eternity.\"" },
+{ "Earthquake", "\"The earth trembled, and rocks parted, revealing the planet's depths.\"" },
+{ "Energy", "\"The fusion of elements unleashed pure power, capable of giving life or destruction.\"" },
+{ "Glass", "\"Fire embraced sand, turning it into a transparent stone that holds light.\"" },
+{ "Golem", "\"From clay and ancient magic, a giant was created, brought to life by the power of the earth.\"" },
+{ "Grass", "\"The first greenery broke through the soil, reaching for the sun.\"" },
+{ "Heat", "\"The power of fire heated the air, filling the world with unbearable heat.\"" },
+{ "Life", "\"From the chaos of elements, something new was born вЂ” the breath of life, ready to explore the world.\"" },
+{ "Mountain", "\"Giant masses rose from the depths, forming mighty peaks.\"" },
+{ "Mud", "\"Earth mixed with water, creating sticky mud вЂ” the foundation of new forms.\"" },
+{ "Ocean", "\"Water gathered into endless expanses, birthing depths full of mysteries.\"" },
+{ "Plant", "\"From a tiny seed, green life grew, nourished by light and water.\"" },
+{ "Pressure", "\"The world compressed, and its force solidified matter, creating new substances.\"" },
+{ "Rain", "\"The sky wept, nourishing the land and giving life to all living things.\"" },
+{ "Sand", "\"The wind eroded rocks, leaving behind endless dunes of sand.\"" },
+{ "Sea", "\"Drops of water merged together, creating the power of tides and waves.\"" },
+{ "Steam", "\"Heat touched water, turning it into a light mist, drifting into the sky.\"" },
+{ "Swamp", "\"Water and earth merged, creating marshlands where life thrives in the shadows.\"" },
+{ "Tree", "\"From a tiny sprout grew a mighty giant, stretching its branches to the sky.\"" },
+{ "Volcano", "\"The earth split open, and fire burst forth, shaping new lands.\"" },
+{ "Wind", "\"Air moved, bringing change and filling the world with the breath of freedom.\"" }
+
+};
+
+    Dictionary<string, string> elementDescriptionsTr = new Dictionary<string, string>
+{
+
+    { "Lava", "\"AteЕџ ve topraktan doДџan lav, gezegenin yanan kanД±dД±r.\"" },
+{ "Stone", "\"Lav soДџudu, hava onu sardД± ve saДџlam bir taЕџ doДџdu.\"" },
+{ "Bacteria", "\"Hayat, bir su damlasД±nda doДџdu ve minik yaratД±klar dГјnyanД±n ilk sakinleri oldu.\"" },
+{ "Clay", "\"Toprak ve su birleЕџerek yumuЕџak kil oluЕџturdu вЂ” gelecekteki yaratД±mlarД±n temeli.\"" },
+{ "Coal", "\"YД±llarca sГјren basД±nГ§, eski ormanlarД± iГ§inde enerji barД±ndД±ran siyah yakД±ta dГ¶nГјЕџtГјrdГј.\"" },
+{ "Diamond", "\"Muazzam basД±nГ§ ve zaman, karbonu sonsuzluДџun parlayan taЕџД±na Г§evirdi.\"" },
+{ "Earthquake", "\"Yer sallandД±, kayalar ayrД±ldД± ve gezegenin derinlikleri aГ§Д±Дџa Г§Д±ktД±.\"" },
+{ "Energy", "\"Elementlerin birleЕџimi, hayat verebilen ya da yok edebilen saf gГјcГј aГ§Д±Дџa Г§Д±kardД±.\"" },
+{ "Glass", "\"AteЕџ, kumu sararak onu Д±ЕџД±ДџД± saklayan Еџeffaf bir taЕџa dГ¶nГјЕџtГјrdГј.\"" },
+{ "Golem", "\"Kil ve kadim bГјyГјlerden, toprak gГјcГјyle canlanan bir dev yaratД±ldД±.\"" },
+{ "Grass", "\"Д°lk yeЕџillik topraДџД± delerek gГјneЕџe doДџru uzandД±.\"" },
+{ "Heat", "\"AteЕџin gГјcГј havayД± Д±sД±ttД± ve dГјnyayД± dayanД±lmaz bir sД±caklД±kla doldurdu.\"" },
+{ "Life", "\"Elementlerin kaosundan yeni bir Еџey doДџdu вЂ” dГјnyayД± keЕџfetmeye hazД±r bir yaЕџam nefesi.\"" },
+{ "Mountain", "\"Devasa kayalar yerin derinliklerinden yГјkselerek gГјГ§lГј zirveler oluЕџturdu.\"" },
+{ "Mud", "\"Toprak ve su karД±Еџarak yapД±Еџkan Г§amur oluЕџturdu вЂ” yeni formlarД±n temeli.\"" },
+{ "Ocean", "\"Su sonsuz geniЕџliklerde toplandД± ve iГ§inde gizemler barД±ndД±ran derinlikleri doДџurdu.\"" },
+{ "Plant", "\"KГјГ§Гјk bir tohumdan, Д±ЕџД±k ve suyla beslenen yeЕџil bir hayat bГјyГјdГј.\"" },
+{ "Pressure", "\"DГјnya sД±kД±ЕџtД± ve gГјcГј maddeyi sertleЕџtirerek yeni yapД±lar oluЕџturdu.\"" },
+{ "Rain", "\"GГ¶kyГјzГј aДџladД±, topraДџД± besledi ve tГјm canlД±lara hayat verdi.\"" },
+{ "Sand", "\"RГјzgar kayalarД± aЕџД±ndД±rarak ardД±nda sonsuz kum tepeleri bД±raktД±.\"" },
+{ "Sea", "\"Su damlalarД± birleЕџerek gelgitlerin ve dalgalarД±n gГјcГјnГј yarattД±.\"" },
+{ "Steam", "\"IsД± suya dokundu ve onu gГ¶kyГјzГјne yГјkselen hafif bir sise dГ¶nГјЕџtГјrdГј.\"" },
+{ "Swamp", "\"Su ve toprak birleЕџerek gГ¶lgelerde hayatД±n geliЕџtiДџi bataklД±klarД± oluЕџturdu.\"" },
+{ "Tree", "\"KГјГ§Гјk bir filizden, gГ¶kyГјzГјne dallarД±nД± uzatan gГјГ§lГј bir dev bГјyГјdГј.\"" },
+{ "Volcano", "\"YeryГјzГј yarД±ldД± ve ateЕџ dД±ЕџarД± fД±rlayarak yeni topraklar oluЕџturdu.\"" },
+{ "Wind", "\"Hava hareket etti, deДџiЕџimi getirdi ve dГјnyayД± Г¶zgГјrlГјДџГјn nefesiyle doldurdu.\"" }
+
+};
 
     void Start()
     {
@@ -71,14 +136,14 @@ public class Match : MonoBehaviour
 
     private void Update()
     {
-        
+
         Collider[] colliderArray = Physics.OverlapSphere(
             transform.position + placeElementsAreaSphereCollider.center,
             placeElementsAreaSphereCollider.radius);
 
         int elementCount = 0;
 
-       
+
         foreach (Collider collider in colliderArray)
         {
             if (collider.TryGetComponent(out ElementSO_Holder elementSO_Holder))
@@ -87,7 +152,7 @@ public class Match : MonoBehaviour
             }
         }
 
-        
+
         if (elementCount == 4)
         {
             buttonMerge.SetActive(true);
@@ -147,19 +212,39 @@ public class Match : MonoBehaviour
 
                 Instantiate(recipe.outputElementSO.prefab, itemSpawnPoint.position, itemSpawnPoint.rotation);
                 Instantiate(successvfxSpawnitem, itemSpawnPoint.position, successvfxSpawnitem.rotation);
+                AudioManager.Instance.PlaySFX("merge");
 
                 recipeUIManager.AddRecipe(recipe);
 
-                transform.DOScale(originalScale * 1.1f, 0.2f) 
+                transform.DOScale(originalScale * 1.1f, 0.2f)
             .SetEase(Ease.OutQuad)
             .OnComplete(() =>
                 transform.DOScale(originalScale, 0.2f).SetEase(Ease.InQuad));
 
-
-                if (elementDescriptions.TryGetValue(recipe.outputElementSO.name, out string description))
+                if (YandexGame.EnvironmentData.language == "ru")
                 {
-                    worldState.AddEvent(description);
+                    if (elementDescriptionsRu.TryGetValue(recipe.outputElementSO.name, out string description))
+                    {
+                        worldState.AddEvent(description);
+                    }
                 }
+
+                if (YandexGame.EnvironmentData.language == "en")
+                {
+                    if (elementDescriptionsEn.TryGetValue(recipe.outputElementSO.name, out string description))
+                    {
+                        worldState.AddEvent(description);
+                    }
+                }
+
+                if (YandexGame.EnvironmentData.language == "tr")
+                {
+                    if (elementDescriptionsTr.TryGetValue(recipe.outputElementSO.name, out string description))
+                    {
+                        worldState.AddEvent(description);
+                    }
+                }
+
 
                 if (recipe.outputElementSO.name == "Stone" && !isMaterialAppliedStone)
                 {
@@ -221,7 +306,7 @@ public class Match : MonoBehaviour
                 if (recipe.outputElementSO.name == "Golem")
                 {
                     planet.SetActive(true);
-                    GolemObject.SetActive(true);
+                    golemObject.SetActive(true);
                 }
 
                 if (recipe.outputElementSO.name == "Mountain")
@@ -257,8 +342,21 @@ public class Match : MonoBehaviour
                     Destroy(obj);
                 }
                 Instantiate(failurevfxSpawnitem, itemSpawnPoint.position, failurevfxSpawnitem.rotation);
-                worldState.AddEvent("\"Что-то не так, но ты на правильном пути. Попробуй снова, и ответы откроются!\"");
-                transform.DOScale(originalScale * 0.85f, 0.15f) 
+                AudioManager.Instance.PlaySFX("badMerge");
+                if (YandexGame.EnvironmentData.language == "ru")
+                {
+                    worldState.AddEvent("\"Р§С‚Рѕ-С‚Рѕ РЅРµ С‚Р°Рє, РЅРѕ С‚С‹ РЅР° РїСЂР°РІРёР»СЊРЅРѕРј РїСѓС‚Рё. РџРѕРїСЂРѕР±СѓР№ СЃРЅРѕРІР°, Рё РѕС‚РІРµС‚С‹ РѕС‚РєСЂРѕСЋС‚СЃСЏ!\"");
+                }
+                if (YandexGame.EnvironmentData.language == "en")
+                {
+                    worldState.AddEvent("\"Something's wrong, but you're on the right track. Try again, and the answers will be revealed!\"");
+                }
+                if (YandexGame.EnvironmentData.language == "tr")
+                {
+                    worldState.AddEvent("\"Bir Еџeyler yanlД±Еџ, ama doДџru yoldasД±n.Yeniden dene ve cevaplar aГ§Д±lacak!\"");
+                }
+               
+                transform.DOScale(originalScale * 0.85f, 0.15f)
             .SetEase(Ease.OutQuad)
             .OnComplete(() =>
                 transform.DOScale(originalScale, 0.15f).SetEase(Ease.InQuad));

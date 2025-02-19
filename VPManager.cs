@@ -18,13 +18,13 @@ public class VPManager : MonoBehaviour
     private void OnEnable()
     {
         SellingElementVP.OnSellingElement += AddVP;
-       
+        RecipeUIManager.OnOpenElement += AddVP;
     }
 
     private void OnDisable()
     {
         SellingElementVP.OnSellingElement -= AddVP;
-
+        RecipeUIManager.OnOpenElement -= AddVP;
     }
 
     private void AddVP(int amount)

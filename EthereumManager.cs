@@ -26,13 +26,17 @@ public class EthereumManager : MonoBehaviour
     private void OnEnable()
     {
         EthereumTapButton.OnTapEthButton += AddEthereum;
+        RewardButton.OnRewardEnergy += AddEthereum;
         BuyBasicElements.OnBuyBasicElements += RemoveEthereum;
+
     }
 
     private void OnDisable()
     {
         EthereumTapButton.OnTapEthButton -= AddEthereum;
+        RewardButton.OnRewardEnergy -= AddEthereum;
         BuyBasicElements.OnBuyBasicElements -= RemoveEthereum;
+
     }
 
     private void AddEthereum(float amount)

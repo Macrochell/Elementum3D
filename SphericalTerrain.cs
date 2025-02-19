@@ -65,5 +65,6 @@ public class SphericalTerrain : MonoBehaviour
     public void ShowPlanet()
     {
         planet.SetActive(!planet.activeSelf);
+        AudioManager.Instance.PlaySFX("click");
     }
 }

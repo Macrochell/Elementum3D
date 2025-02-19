@@ -15,6 +15,8 @@ public class AudioManager : MonoBehaviour
 
     public List<AudioClipData> audioClips;
     private Dictionary<string, AudioClip> clipDictionary;
+    public float musicVolume = 1f;
+    public float sfxVolume = 1f;
 
     private void Awake()
     {
@@ -63,20 +65,58 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void StopSFX()
+ 
+
+    public void PlayMusic(string clipName, bool loop = true)
     {
+        if (clipDictionary.TryGetValue(clipName, out AudioClip clip))
+        {
+            GameObject[] musicObjects = GameObject.FindGameObjectsWithTag("Music");
+            foreach (GameObject obj in musicObjects)
+            {
+                AudioSource musicSource = obj.GetComponent<AudioSource>();
+                if (musicSource != null)
+                {
+                    musicSource.clip = clip;
+                    musicSource.loop = loop;
+                    musicSource.volume = musicVolume;
+                    musicSource.Play();
+                }
+            }
+        }
+
+    }
+
+
+    public void SetMusicVolume(float volume)
+    {
+        musicVolume = volume;
+        GameObject[] musicObjects = GameObject.FindGameObjectsWithTag("Music");
+        foreach (GameObject obj in musicObjects)
+        {
+            AudioSource musicSource = obj.GetComponent<AudioSource>();
+            if (musicSource != null)
+            {
+                musicSource.volume = musicVolume;
+            }
+        }
+    }
+
+
+    public void SetSFXVolume(float volume)
+    {
+
+        sfxVolume = volume;
         GameObject[] sfxObjects = GameObject.FindGameObjectsWithTag("SFX");
         foreach (GameObject obj in sfxObjects)
         {
             AudioSource sfxSource = obj.GetComponent<AudioSource>();
             if (sfxSource != null)
             {
-                sfxSource.loop = false;
-                sfxSource.Stop();
+                sfxSource.volume = sfxVolume;
             }
         }
+       
     }
-
-
 
 }

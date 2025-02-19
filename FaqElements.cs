@@ -2,12 +2,23 @@ using UnityEngine;
 
 public class FaqElements : MonoBehaviour
 {
-    public GameObject targetObject; 
+  
+    public GameObject[] targetObjects;
 
     public void ToggleActiveState()
     {
         
-            targetObject.SetActive(!targetObject.activeSelf);
         
+        AudioManager.Instance.PlaySFX("click");
+
+        foreach (GameObject obj in targetObjects)
+        {
+            if (obj != null)
+            {
+                obj.SetActive(!obj.activeSelf);
+            }
+        }
     }
+
+
 }

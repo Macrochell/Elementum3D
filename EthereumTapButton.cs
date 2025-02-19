@@ -20,5 +20,6 @@ public class EthereumTapButton : MonoBehaviour
             .OnComplete(() => transform.DOScale(originalScale, 0.1f));
 
         OnTapEthButton?.Invoke(ethCount);
+        AudioManager.Instance.PlaySFX("tap");
     }
 }
